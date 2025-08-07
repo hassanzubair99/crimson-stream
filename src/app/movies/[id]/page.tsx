@@ -52,24 +52,24 @@ export default async function MovieDetailsPage({ params }: MovieDetailsPageProps
       {/* Content Details */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 -mt-24 md:-mt-32 relative z-10 pb-16">
         <div className="max-w-4xl">
-          <h1 className="text-4xl md:text-6xl font-headline font-bold text-white drop-shadow-lg">
+          <h1 className="text-4xl md:text-6xl font-headline font-bold text-white drop-shadow-lg animate-fade-in-up">
             {movie.title}
           </h1>
-          <div className="flex items-center gap-4 mt-4 flex-wrap">
+          <div className="flex items-center gap-4 mt-4 flex-wrap animate-fade-in-up [--animation-delay:200ms]">
             <Badge variant="secondary">{movie.type === 'movie' ? 'Movie' : 'TV Show'}</Badge>
             <Badge variant="outline">{movie.genre}</Badge>
           </div>
           
-          <p className="mt-6 text-lg text-foreground/80">
+          <p className="mt-6 text-lg text-foreground/80 animate-fade-in-up [--animation-delay:400ms]">
             {movie.description}
           </p>
 
-          <div className="mt-8 flex flex-col sm:flex-row gap-4">
+          <div className="mt-8 flex flex-col sm:flex-row gap-4 animate-fade-in-up [--animation-delay:600ms]">
            <VideoPlayer src={movie.videoUrl} title={movie.title} isExternal={isJurassicParkRebirth} />
             <WatchlistButton mediaId={movie.id} />
           </div>
 
-          <div className="mt-12 space-y-6">
+          <div className="mt-12 space-y-6 animate-fade-in-up [--animation-delay:800ms]">
             <div>
               <h3 className="text-xl font-semibold flex items-center gap-2 mb-2">
                 <Users className="text-primary" />
@@ -95,9 +95,3 @@ export default async function MovieDetailsPage({ params }: MovieDetailsPageProps
     </div>
   );
 }
-
-// export async function generateStaticParams() {
-//   // This would require fetching all possible movie IDs from TMDB at build time,
-//   // which is not practical. We will rely on on-demand rendering.
-//   return [];
-// }

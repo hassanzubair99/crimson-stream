@@ -37,7 +37,7 @@ function SearchResults() {
   );
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fade-in">
       <h1 className="text-4xl font-headline font-bold mb-8 flex items-center gap-4">
         <SearchIcon className="w-10 h-10 text-primary" />
         {query ? `Search Results for "${query}"` : 'Search'}
@@ -47,14 +47,20 @@ function SearchResults() {
 
       {!isLoading && query && results.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6">
-          {results.map(item => (
-            <ContentCard key={item.id} item={item} />
+          {results.map((item, index) => (
+             <div
+              key={item.id}
+              className="animate-fade-in-up"
+              style={{ animationDelay: `${index * 50}ms`}}
+            >
+              <ContentCard item={item} />
+            </div>
           ))}
         </div>
       )}
 
       {!isLoading && query && results.length === 0 && (
-        <div className="text-center py-20 border-2 border-dashed rounded-lg">
+        <div className="text-center py-20 border-2 border-dashed rounded-lg animate-fade-in">
           <h2 className="text-2xl font-semibold text-foreground/80">No Results Found</h2>
           <p className="mt-2 text-muted-foreground">
             We couldn't find anything for "{query}". Try a different search.
@@ -63,7 +69,7 @@ function SearchResults() {
       )}
 
       {!query && (
-         <div className="text-center py-20 border-2 border-dashed rounded-lg">
+         <div className="text-center py-20 border-2 border-dashed rounded-lg animate-fade-in">
           <h2 className="text-2xl font-semibold text-foreground/80">Search for content</h2>
           <p className="mt-2 text-muted-foreground">
             Use the search bar in the header to find movies and shows.

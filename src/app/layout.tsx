@@ -4,6 +4,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { cn } from '@/lib/utils';
 import { AppStateProvider } from '@/context/AppStateContext';
 import { Intro } from '@/components/common/Intro';
+import { Header } from '@/components/common/Header';
 
 export const metadata: Metadata = {
   title: 'Crimson Stream',
@@ -26,7 +27,12 @@ export default function RootLayout({
       </head>
       <body className={cn('font-body antialiased min-h-screen flex flex-col')}>
         <AppStateProvider>
-          <Intro>{children}</Intro>
+          <Intro>
+            <Header />
+            <main className="flex-grow">
+              {children}
+            </main>
+          </Intro>
         </AppStateProvider>
         <Toaster />
       </body>
