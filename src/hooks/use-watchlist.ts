@@ -2,55 +2,75 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { toast } from '@/hooks/use-toast';
+import { useAuth } from '@/context/AuthContext';
 
-const WATCHLIST_KEY = 'crimson-stream-watchlist';
+function getWatchlistKey(userId: string | null) {
+  return userId ? `crimson-stream-watchlist-${userId}` : null;
+}
 
 export function useWatchlist() {
+  const { user } = useAuth();
   const [watchlist, setWatchlist] = useState<number[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
+  const WATCHLIST_KEY = getWatchlistKey(user?.email || null);
+
 
   useEffect(() => {
-    try {
-      const saved = localStorage.getItem(WATCHLIST_KEY);
-      if (saved) {
-        setWatchlist(JSON.parse(saved));
+    if (user) {
+      try {
+        const saved = localStorage.getItem(WATCHLIST_KEY!);
+        if (saved) {
+          setWatchlist(JSON.parse(saved));
+        } else {
+          setWatchlist([]);
+        }
+      } catch (error) {
+        console.error('Failed to parse watchlist from localStorage', error);
+        setWatchlist([]);
+      } finally {
+        setIsLoaded(true);
       }
-    } catch (error) {
-      console.error('Failed to parse watchlist from localStorage', error);
+    } else {
+      // Not logged in, clear watchlist and mark as loaded
       setWatchlist([]);
-    } finally {
       setIsLoaded(true);
     }
-  }, []);
+  }, [user, WATCHLIST_KEY]);
 
   const updateLocalStorage = (newList: number[]) => {
-    try {
-      localStorage.setItem(WATCHLIST_KEY, JSON.stringify(newList));
-    } catch (error) {
-      console.error('Failed to save watchlist to localStorage', error);
-      toast({
-        title: 'Error',
-        description: 'Could not update your watchlist.',
-        variant: 'destructive',
-      });
+    if (WATCHLIST_KEY) {
+      try {
+        localStorage.setItem(WATCHLIST_KEY, JSON.stringify(newList));
+      } catch (error) {
+        console.error('Failed to save watchlist to localStorage', error);
+        toast({
+          title: 'Error',
+          description: 'Could not update your watchlist.',
+          variant: 'destructive',
+        });
+      }
     }
   };
 
   const addToWatchlist = useCallback((id: number) => {
-    if (watchlist.includes(id)) return;
-    const newList = [...watchlist, id];
-    setWatchlist(newList);
-    updateLocalStorage(newList);
-    toast({ title: 'Added to Watchlist' });
-  }, [watchlist]);
+    setWatchlist(prevList => {
+       if (prevList.includes(id)) return prevList;
+       const newList = [...prevList, id];
+       updateLocalStorage(newList);
+       toast({ title: 'Added to Watchlist' });
+       return newList;
+    });
+  }, []);
 
   const removeFromWatchlist = useCallback((id: number) => {
-    if (!watchlist.includes(id)) return;
-    const newList = watchlist.filter((itemId) => itemId !== id);
-    setWatchlist(newList);
-    updateLocalStorage(newList);
-    toast({ title: 'Removed from Watchlist' });
-  }, [watchlist]);
+    setWatchlist(prevList => {
+       if (!prevList.includes(id)) return prevList;
+       const newList = prevList.filter((itemId) => itemId !== id);
+       updateLocalStorage(newList);
+       toast({ title: 'Removed from Watchlist' });
+       return newList;
+    });
+  }, []);
 
   const isInWatchlist = useCallback((id: number) => {
     return watchlist.includes(id);
