@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import { mediaData } from '@/lib/data';
+import { getMovieDetails } from '@/lib/tmdb';
 import { Badge } from '@/components/ui/badge';
 import { Users, Clapperboard } from 'lucide-react';
 import { WatchlistButton } from '@/components/common/WatchlistButton';
@@ -13,8 +13,8 @@ interface MovieDetailsPageProps {
   };
 }
 
-export function generateMetadata({ params }: MovieDetailsPageProps) {
-  const movie = mediaData.find(m => m.id === parseInt(params.id, 10));
+export async function generateMetadata({ params }: MovieDetailsPageProps) {
+  const movie = await getMovieDetails(parseInt(params.id, 10));
   if (!movie) {
     return { title: 'Not Found' };
   }
@@ -24,8 +24,8 @@ export function generateMetadata({ params }: MovieDetailsPageProps) {
   };
 }
 
-export default function MovieDetailsPage({ params }: MovieDetailsPageProps) {
-  const movie = mediaData.find(m => m.id === parseInt(params.id, 10));
+export default async function MovieDetailsPage({ params }: MovieDetailsPageProps) {
+  const movie = await getMovieDetails(parseInt(params.id, 10));
 
   if (!movie) {
     notFound();
@@ -36,7 +36,7 @@ export default function MovieDetailsPage({ params }: MovieDetailsPageProps) {
       {/* Hero Banner */}
       <section className="relative h-[50vh] md:h-[60vh] w-full">
         <Image
-          src={movie.coverImage}
+          src={movie.backdrop_path ? `https://image.tmdb.org/t/p/original${movie.backdrop_path}` : movie.coverImage}
           alt={`Poster for ${movie.title}`}
           fill
           className="object-cover object-top"
@@ -93,8 +93,8 @@ export default function MovieDetailsPage({ params }: MovieDetailsPageProps) {
   );
 }
 
-export async function generateStaticParams() {
-  return mediaData.map(movie => ({
-    id: movie.id.toString(),
-  }));
-}
+// export async function generateStaticParams() {
+//   // This would require fetching all possible movie IDs from TMDB at build time,
+//   // which is not practical. We will rely on on-demand rendering.
+//   return [];
+// }

@@ -1,8 +1,7 @@
 'use client';
 
 import { useEffect, useState, useMemo } from 'react';
-import { getRelatedContent } from '@/app/actions';
-import { mediaData } from '@/lib/data';
+import { getSimilarMovies } from '@/lib/tmdb';
 import type { Media } from '@/lib/types';
 import { ContentCarousel } from './ContentCarousel';
 import { Skeleton } from '../ui/skeleton';
@@ -17,17 +16,11 @@ export function RelatedContent({ media }: RelatedContentProps) {
 
   useEffect(() => {
     const fetchSuggestions = async () => {
+      if (!media.id) return;
       setIsLoading(true);
       try {
-        const result = await getRelatedContent({ title: media.title, genre: media.genre });
-        const suggestedTitles = result.suggestions;
-        
-        // Filter the main data to find the media objects for the suggested titles
-        const fullSuggestions = mediaData.filter(item => 
-          suggestedTitles.includes(item.title) && item.id !== media.id
-        );
-        
-        setSuggestions(fullSuggestions);
+        const similarMovies = await getSimilarMovies(media.id);
+        setSuggestions(similarMovies);
       } catch (error) {
         console.error('Failed to fetch related content:', error);
       } finally {
@@ -36,7 +29,7 @@ export function RelatedContent({ media }: RelatedContentProps) {
     };
 
     fetchSuggestions();
-  }, [media.title, media.genre, media.id]);
+  }, [media.id]);
 
   const LoadingSkeleton = useMemo(() => (
     <div className="space-y-4">
