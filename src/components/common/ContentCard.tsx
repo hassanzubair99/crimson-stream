@@ -2,7 +2,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Card } from '@/components/ui/card';
 import type { Media } from '@/lib/types';
-import { PlayCircle } from 'lucide-react';
 
 interface ContentCardProps {
   item: Media;
@@ -31,9 +30,6 @@ export function ContentCard({ item }: ContentCardProps) {
             className="object-cover rounded-md"
             data-ai-hint="movie poster"
           />
-          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-            <PlayCircle className="h-16 w-16 text-white" />
-          </div>
         </div>
       </Card>
     </Link>
