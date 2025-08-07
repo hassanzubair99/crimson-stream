@@ -13,7 +13,7 @@ export function Intro({ children }: { children: React.ReactNode }) {
       // Wait for fade-out animation to complete before finishing intro
       const finishTimer = setTimeout(finishIntro, 500); 
       return () => clearTimeout(finishTimer);
-    }, 3500); // Total duration of the intro screen
+    }, 3000); // Total duration of the intro screen
 
     return () => clearTimeout(timer);
   }, [finishIntro]);
