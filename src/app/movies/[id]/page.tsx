@@ -31,6 +31,9 @@ export default async function MovieDetailsPage({ params }: MovieDetailsPageProps
     notFound();
   }
 
+  const isJurassicParkRebirth = movie.title === 'Jurassic World Rebirth';
+
+
   return (
     <div className="min-h-screen">
       {/* Hero Banner */}
@@ -62,7 +65,7 @@ export default async function MovieDetailsPage({ params }: MovieDetailsPageProps
           </p>
 
           <div className="mt-8 flex flex-col sm:flex-row gap-4">
-            <VideoPlayer src={movie.videoUrl} title={movie.title} />
+           <VideoPlayer src={movie.videoUrl} title={movie.title} isExternal={isJurassicParkRebirth} />
             <WatchlistButton mediaId={movie.id} />
           </div>
 

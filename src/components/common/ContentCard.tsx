@@ -9,8 +9,18 @@ interface ContentCardProps {
 }
 
 export function ContentCard({ item }: ContentCardProps) {
+  const isJurassicParkRebirth = item.title === 'Jurassic World Rebirth';
+  const href = isJurassicParkRebirth
+    ? 'https://hdmovie2.st/72801-jurassic-world-rebirth.html'
+    : `/movies/${item.id}`;
+
+  const linkProps = {
+    href,
+    ...(isJurassicParkRebirth && { target: '_blank', rel: 'noopener noreferrer' }),
+  };
+
   return (
-    <Link href={`/movies/${item.id}`} className="block group">
+    <Link {...linkProps} className="block group">
       <Card className="overflow-hidden transition-all duration-300 ease-in-out hover:shadow-lg hover:shadow-primary/20 hover:scale-105 border-transparent">
         <div className="aspect-[2/3] relative">
           <Image

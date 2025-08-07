@@ -13,9 +13,25 @@ import { PlayCircle } from 'lucide-react';
 interface VideoPlayerProps {
   src: string;
   title: string;
+  isExternal?: boolean;
 }
 
-export function VideoPlayer({ src, title }: VideoPlayerProps) {
+export function VideoPlayer({ src, title, isExternal = false }: VideoPlayerProps) {
+  const handlePlayClick = () => {
+    if (isExternal) {
+      window.open(src, '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  if (isExternal) {
+    return (
+       <Button onClick={handlePlayClick} size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
+        <PlayCircle className="mr-2 h-6 w-6" />
+        Play
+      </Button>
+    )
+  }
+  
   return (
     <Dialog>
       <DialogTrigger asChild>

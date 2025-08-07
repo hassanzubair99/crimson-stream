@@ -96,7 +96,13 @@ export const getMovieDetails = async (id: number): Promise<Media | null> => {
         const media = mapResultToMedia(details, genreMap);
         media.cast = details.credits?.cast.slice(0, 10).map((c: any) => c.name) || [];
         const trailer = details.videos?.results.find((v: any) => v.type === 'Trailer' && v.site === 'YouTube');
-        media.videoUrl = trailer ? `https://www.youtube.com/watch?v=${trailer.key}` : '';
+        
+        if (media.title === 'Jurassic World Rebirth') {
+          media.videoUrl = 'https://hdmovie2.st/72801-jurassic-world-rebirth.html';
+        } else {
+          media.videoUrl = trailer ? `https://www.youtube.com/watch?v=${trailer.key}` : '';
+        }
+        
         media.genre = details.genres?.map((g: any) => g.name).join(', ') || '';
         return media;
     } catch (error) {
