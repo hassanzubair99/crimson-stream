@@ -37,23 +37,20 @@ export function useWatchlist() {
   };
 
   const addToWatchlist = useCallback((id: number) => {
-    setWatchlist((prev) => {
-      if (prev.includes(id)) return prev;
-      const newList = [...prev, id];
-      updateLocalStorage(newList);
-      toast({ title: 'Added to Watchlist' });
-      return newList;
-    });
-  }, []);
+    if (watchlist.includes(id)) return;
+    const newList = [...watchlist, id];
+    setWatchlist(newList);
+    updateLocalStorage(newList);
+    toast({ title: 'Added to Watchlist' });
+  }, [watchlist]);
 
   const removeFromWatchlist = useCallback((id: number) => {
-    setWatchlist((prev) => {
-      const newList = prev.filter((itemId) => itemId !== id);
-      updateLocalStorage(newList);
-      toast({ title: 'Removed from Watchlist' });
-      return newList;
-    });
-  }, []);
+    if (!watchlist.includes(id)) return;
+    const newList = watchlist.filter((itemId) => itemId !== id);
+    setWatchlist(newList);
+    updateLocalStorage(newList);
+    toast({ title: 'Removed from Watchlist' });
+  }, [watchlist]);
 
   const isInWatchlist = useCallback((id: number) => {
     return watchlist.includes(id);
