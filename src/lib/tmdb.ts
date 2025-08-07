@@ -5,25 +5,19 @@ const API_READ_ACCESS_TOKEN = process.env.NEXT_PUBLIC_TMDB_API_READ_ACCESS_TOKEN
 const API_BASE_URL = 'https://api.themoviedb.org/3';
 
 const tmdbApi = async <T>(endpoint: string, params: Record<string, string> = {}): Promise<T> => {
+  if (!API_READ_ACCESS_TOKEN && !API_KEY) {
+    throw new Error('TMDB API Key or Read Access Token is not defined in environment variables.');
+  }
+
   const urlParams = new URLSearchParams(params);
   const url = `${API_BASE_URL}/${endpoint}?${urlParams}`;
 
   const options: RequestInit = {
     headers: {
       accept: 'application/json',
+      Authorization: `Bearer ${API_READ_ACCESS_TOKEN}`,
     },
   };
-
-  if (API_READ_ACCESS_TOKEN) {
-    options.headers = {
-      ...options.headers,
-      Authorization: `Bearer ${API_READ_ACCESS_TOKEN}`,
-    };
-  } else if (API_KEY) {
-    urlParams.set('api_key', API_KEY);
-  } else {
-    throw new Error('TMDB API Key or Read Access Token is not defined.');
-  }
 
   try {
     const response = await fetch(url, options);
