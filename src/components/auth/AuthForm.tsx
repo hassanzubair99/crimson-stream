@@ -21,7 +21,8 @@ import {
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { Loader2 } from 'lucide-react';
-// import { login, signup } from '@/lib/auth'; // We'll add this later
+import { useAuth } from '@/context/AuthContext';
+
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Invalid email address.' }),
@@ -36,6 +37,7 @@ export function AuthForm({ mode }: AuthFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
+  const { login, signup } = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -48,20 +50,18 @@ export function AuthForm({ mode }: AuthFormProps) {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
     try {
-      // Dummy logic
-      await new Promise(resolve => setTimeout(resolve, 1000));
       if (mode === 'login') {
-         console.log('Login successful with:', values);
+         await login(values.email, values.password);
          toast({ title: 'Login Successful', description: "Welcome back!" });
       } else {
-         console.log('Signup successful with:', values);
+         await signup(values.email, values.password);
          toast({ title: 'Signup Successful', description: "Your account has been created." });
       }
       router.push('/');
     } catch (error: any) {
       toast({
         title: 'Authentication Error',
-        description: 'An error occurred. Please try again.',
+        description: error.message || 'An error occurred. Please try again.',
         variant: 'destructive',
       });
     } finally {

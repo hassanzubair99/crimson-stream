@@ -2,16 +2,18 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Film, Tv, Bookmark, Search, Menu, User } from 'lucide-react';
+import { Film, Tv, Bookmark, Search, Menu, User, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import React from 'react';
 import { useAppState } from '@/context/AppStateContext';
+import { useAuth } from '@/context/AuthContext';
 
 export function Header() {
   const router = useRouter();
   const { isIntroFinished } = useAppState();
+  const { user, logout } = useAuth();
 
   const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -28,9 +30,15 @@ export function Header() {
       <Link href="/watchlist" className="transition-colors hover:text-primary flex items-center gap-2">
         <Bookmark className="h-4 w-4" /> Watchlist
       </Link>
-       <Link href="/login" className="transition-colors hover:text-primary flex items-center gap-2">
-        <User className="h-4 w-4" /> Login
-      </Link>
+      {user ? (
+          <Button variant="ghost" onClick={logout} className="transition-colors hover:text-primary flex items-center gap-2">
+            <LogOut className="h-4 w-4" /> Logout
+          </Button>
+      ) : (
+        <Link href="/login" className="transition-colors hover:text-primary flex items-center gap-2">
+          <User className="h-4 w-4" /> Login
+        </Link>
+      )}
     </>
   );
 

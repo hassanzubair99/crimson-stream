@@ -9,9 +9,10 @@ import { PlayCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import type { Media } from '@/lib/types';
 import { useAppState } from '@/context/AppStateContext';
+import withAuth from '@/components/auth/withAuth';
 
 
-export default function Home() {
+function Home() {
   const [trendingNow, setTrendingNow] = useState<Media[]>([]);
   const [nowPlaying, setNowPlaying] = useState<Media[]>([]);
   const [popularMovies, setPopularMovies] = useState<Media[]>([]);
@@ -91,3 +92,5 @@ export default function Home() {
     </div>
   );
 }
+
+export default withAuth(Home);
