@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Film, Tv, Bookmark, Search, Menu } from 'lucide-react';
+import { Film, Tv, Bookmark, Search, Menu, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -27,6 +27,9 @@ export function Header() {
       <Link href="/" className="transition-colors hover:text-primary">Home</Link>
       <Link href="/watchlist" className="transition-colors hover:text-primary flex items-center gap-2">
         <Bookmark className="h-4 w-4" /> Watchlist
+      </Link>
+       <Link href="/login" className="transition-colors hover:text-primary flex items-center gap-2">
+        <User className="h-4 w-4" /> Login
       </Link>
     </>
   );
